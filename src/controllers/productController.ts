@@ -21,9 +21,16 @@ export const createProduct = async (req: Request, res: Response) => {
 
 export const getProducts = async (req: Request, res: Response) => {
   try {
-    const { page = 1, limit = 10, category, isActive = true } = req.query;
+    const { page = 1, limit = 10, category, isActive } = req.query;
     
-    const filter: any = { isActive: isActive === 'true' };
+    // Si no se especifica isActive, por defecto mostrar solo productos activos
+    const filter: any = {};
+    if (isActive !== undefined) {
+      filter.isActive = isActive === 'true';
+    } else {
+      filter.isActive = true; // Por defecto, solo productos activos
+    }
+    
     if (category) {
       filter.category = { $regex: category, $options: 'i' };
     }
