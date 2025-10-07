@@ -56,10 +56,8 @@ const validateRefreshToken = (req: Request, res: Response, next: NextFunction) =
         // Agregar información del usuario al request
         (req as any).user = decoded;
         
-        console.log("AccessToken renovado exitosamente"); // Debug log temporal
         next();
     } catch (err) {
-        console.error("Error al validar refreshToken:", err); // Debug log
         return res.status(401).json({ 
             message: "Token de actualización inválido. Por favor, inicia sesión nuevamente." 
         });

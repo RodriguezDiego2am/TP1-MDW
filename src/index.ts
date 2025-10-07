@@ -11,11 +11,13 @@ import cookieParser from "cookie-parser";
 
 dotenv.config();
 const app = express();
-const port = process.env.PORT;
+const port = process.env.PORT || 3000;
 const mongoUri = process.env.MONGO_URI!;
 
 app.use(cors({
-  origin: ['http://127.0.0.1:5500', 'http://localhost:5500'],
+  origin: process.env.NODE_ENV === 'production' 
+    ? ['https://tu-frontend-domain.com'] // Cambia por tu dominio de frontend
+    : ['http://127.0.0.1:5500', 'http://localhost:5500', 'http://localhost:3000'],
   credentials: true,
 }));
 app.use(express.json({ limit: "10mb" }));
@@ -29,6 +31,7 @@ app.use("/api/cart", authMiddleware, cartRoutes);
 app.get("/", (req, res) => {
   res.json({
     message: "¡API funcionando correctamente!",
+    version: "1.0.0",
     endpoints: {
       auth: {
         register: "POST /api/auth/register",
@@ -51,19 +54,6 @@ app.get("/", (req, res) => {
         clear: "DELETE /api/cart/clear (auth required)"
       }
     }
-  });
-});
-
-// Endpoint temporal para verificar autenticación
-app.get("/api/auth/check", (req, res) => {
-  const accessToken = req.cookies.accessToken;
-  const refreshToken = req.cookies.refreshToken;
-  
-  res.json({
-    hasAccessToken: !!accessToken,
-    hasRefreshToken: !!refreshToken,
-    accessTokenPreview: accessToken ? accessToken.substring(0, 20) + "..." : null,
-    refreshTokenPreview: refreshToken ? refreshToken.substring(0, 20) + "..." : null
   });
 });
 
