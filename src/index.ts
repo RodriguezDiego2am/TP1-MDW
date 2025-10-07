@@ -64,14 +64,13 @@ app.listen(port, () => {
 const connectToDb = async () => {
   try {
     await mongoose.connect(mongoUri, {
-      serverSelectionTimeoutMS: 30000, // 30 seconds
-      socketTimeoutMS: 45000, // 45 seconds
-      bufferCommands: false
+      serverSelectionTimeoutMS: 30000,
+      socketTimeoutMS: 45000
     });
     console.log("MongoDB Atlas conectado exitosamente");
   } catch (error) {
     console.error(`Error de conexión a MongoDB: ${error}`);
-    process.exit(1); // Salir si no puede conectar
+    process.exit(1);
   }
 };
 connectToDb();
